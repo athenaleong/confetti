@@ -21,10 +21,14 @@
     </head>
     <body>
         <canvas id="confetti-holder"></canvas>
-        <!-- <script type='module' src="confetti.js"></script> -->
         <script type="module">
-            import EmojiConfettiGenerator from './confetti.js'
-            var canvas = new EmojiConfettiGenerator()
+            import EmojiConfettiGenerator from '../src/confetti.js'
+            var canvas = new EmojiConfettiGenerator({
+                target:'confetti-holder',
+                emojis: ['🤩'],
+                startVelocity: 5,
+                gravity:5
+            })
             canvas.render()
         </script>
     </body>
