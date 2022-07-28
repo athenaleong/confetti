@@ -5,8 +5,8 @@ function EmojiConfettiGenerator(params) {
      */
     var defaults = {
         target: 'confetti-holder', //id of the canvas 
-        max: 50, //maximum number of particles produced
-        emojis: ['🍍', '💛'], //emojis
+        max: 80, //maximum number of particles produced
+        emojis: ['🦕', '🥳'], //emojis
         width: window.innerWidth, //dynamics height
         height: window.innerHeight, //dynamic width
         startVelocity: 3, //starting velocity
@@ -14,10 +14,10 @@ function EmojiConfettiGenerator(params) {
         gravity: 5,
         sizeLower: 10, //lower bound of emoji size
         sizeHigher: 90, //upper bound of emoji size
-        angle: 90/ 180 * Math.PI, //angle of explosion
-        origin: {x: [500, 505],  
-                y: [300, 305]}, //range of origin of explosion
-        spread: 0.5 * Math.PI, //spread of explosion
+        angle: 270/180 * Math.PI, //angle of explosion
+        origin: {x: [-200, 1000],  
+                y: [-600, 300]}, //range of origin of explosion
+        spread: 0 * Math.PI //spread of explosion
     };
 
     /**
@@ -75,7 +75,6 @@ function EmojiConfettiGenerator(params) {
             rotate: rand(0, 2 * Math.PI),
             rotateSpeed: (rand(-1, 1) < 0 ? -1 : 1) * rand(0.005, 0.03),
             size: rand(defaults.sizeLower, defaults.sizeHigher, true),
-            
         }
 
         return p

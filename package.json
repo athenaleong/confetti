@@ -1,19 +1,30 @@
 {
   "name": "emoji-cannon",
   "version": "1.0.0",
-  "description": "explosion of emoji",
+  "description": "Generate emoji animation in the browser",
   "main": "src/confetti.js",
   "scripts": {
-    "test": "mocha"
+    "build": "rollup -c"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/athenaleong/confetti.git"
   },
-  "author": "Athena Leong",
+  "author": "Athena Leong <alyh.tech@gmail.com>",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/athenaleong/confetti/issues"
   },
-  "homepage": "https://github.com/athenaleong/confetti#readme"
+  "homepage": "https://github.com/athenaleong/confetti#readme",
+  "keywords": [
+    "canvas",
+    "emoji",
+    "firework",
+    "rain",
+    "particles"
+  ],
+  "devDependencies": {
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-terser": "^7.0.2"
+  }
 }

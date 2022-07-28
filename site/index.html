@@ -8,7 +8,25 @@
                 background-color: #fff;
                 overflow: hidden;
             }
-
+            #confetti-holder {
+                position: relative;
+                top:0;
+                left: 0;
+                z-index: 1;
+                width: 100%;
+                height: 100%;
+            }
+        </style>
+<html>
+    <head>
+        <style>
+            body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                background-color: #fff;
+                overflow: hidden;
+            }
             #confetti-holder {
                 position: relative;
                 top:0;
@@ -21,15 +39,22 @@
     </head>
     <body>
         <canvas id="confetti-holder"></canvas>
+        <!-- <script type='module' src="confetti.js"></script> -->
         <script type="module">
             import EmojiConfettiGenerator from '../src/confetti.js'
             var canvas = new EmojiConfettiGenerator({
                 target:'confetti-holder',
                 emojis: ['🤩'],
-                startVelocity: 5,
+                startVelocity: 1,
                 gravity:5
             })
             canvas.render()
+            document.addEventListener('keydown', function(e) {
+                if (e.keyCode === 32) {
+                    canvas.render()
+                }
+            })
         </script>
     </body>
+</html>
 </html>
