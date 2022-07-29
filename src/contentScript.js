@@ -1,17 +1,7 @@
 'use strict';
 
-// Content script file will run in the context of web page.
-// With content script you can manipulate the web pages using
-// Document Object Model (DOM).
-// You can also pass information to the parent extension.
+import EmojiConfettiGenerator from './confetti.js'
 
-// We execute this script by making an entry in manifest.json file
-// under `content_scripts` property
-
-// For more information on Content Scripts,
-// See https://developer.chrome.com/extensions/content_scripts
-
-// Log `title` of current active web page
 const pageTitle = document.head.getElementsByTagName('title')[0].innerHTML;
 console.log(
   `Page title is: '${pageTitle}' - evaluated by Chrome extension's 'contentScript.js' file`
@@ -32,12 +22,38 @@ chrome.runtime.sendMessage(
 
 // Listen for message
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  console.log('received message');
+
   if (request.type === 'COUNT') {
     console.log(`Current count is ${request.payload.count}`);
   }
 
   // Send an empty response
   // See https://github.com/mozilla/webextension-polyfill/issues/130#issuecomment-531531890
+  
+  if (request.type === 'fire-up') {
+    console.log('firing')
+
+    const canvas = document.createElement('canvas');
+    canvas.setAttribute('id', 'confetti-holder');
+    canvas.style.zIndex = '9999';
+    canvas.style.width = '100%';
+    canvas.style.height = '100%';
+    canvas.style.position = 'fixed';
+    canvas.style.top = '0';
+    canvas.style.left = '0';
+
+    document.body.appendChild(canvas);
+    const cannon = new EmojiConfettiGenerator({
+      target:'confetti-holder',
+      emojis: ['🪐', "🌚"],
+      startVelocity: 1,
+      gravity:1
+    })
+    cannon.render()
+  }
+
   sendResponse({});
   return true;
 });
+

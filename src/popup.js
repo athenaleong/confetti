@@ -1,112 +1,69 @@
 'use strict';
 
 import './popup.css';
+import { createPicker } from 'picmo';
 
 (function () {
-  // We will make use of Storage API to get and store `count` value
-  // More information on Storage API can we found at
-  // https://developer.chrome.com/extensions/storage
 
-  // To get storage access, we have to mention it in `permissions` property of manifest.json file
-  // More information on Permissions can we found at
-  // https://developer.chrome.com/extensions/declare_permissions
-  const counterStorage = {
-    get: (cb) => {
-      chrome.storage.sync.get(['count'], (result) => {
-        cb(result.count);
-      });
-    },
-    set: (value, cb) => {
-      chrome.storage.sync.set(
-        {
-          count: value,
-        },
-        () => {
-          cb();
-        }
-      );
-    },
-  };
+  let selectedEmoji = 0;
+  const actionButton = document.getElementById('action-button');
+  let tab;
+  chrome.tabs.query({active: true, lastFocusedWindow: true}, tabs => {
+    tab = tabs[0];
+  });
 
-  function setupCounter(initialValue = 0) {
-    document.getElementById('counter').innerHTML = initialValue;
+  // Create the picker
+  const rootElement = document.querySelector('#picker-container');
+  const picker = createPicker({ rootElement });
 
-    document.getElementById('incrementBtn').addEventListener('click', () => {
-      updateCounter({
-        type: 'INCREMENT',
-      });
-    });
+  // The picker emits an event when an emoji is selected. 
+  picker.addEventListener('emoji:select', event => {
+    console.log('Emoji selected:', event.emoji);
+    emojiArray[selectedEmoji].innerHTML = event.emoji;
+    togglePicker();
+  });
 
-    document.getElementById('decrementBtn').addEventListener('click', () => {
-      updateCounter({
-        type: 'DECREMENT',
-      });
-    });
+  // Set up Array of Emojis Divs
+  const emojiArray = [];
+  let emoji;
+  for (let i = 1; i < 4; i++) {
+    emoji = document.querySelector(`#emoji-${i}`);
+    emojiArray.push(emoji);
+    emoji.addEventListener('click', () => {
+      selectedEmoji = i - 1;
+      console.log(selectedEmoji, 'selected');
+      togglePicker();
+    })
   }
 
-  function updateCounter({ type }) {
-    counterStorage.get((count) => {
-      let newCount;
+  // Add event for button
+  actionButton.addEventListener('click', () => {
+      fireCannon();
+  })
 
-      if (type === 'INCREMENT') {
-        newCount = count + 1;
-      } else if (type === 'DECREMENT') {
-        newCount = count - 1;
-      } else {
-        newCount = count;
-      }
-
-      counterStorage.set(newCount, () => {
-        document.getElementById('counter').innerHTML = newCount;
-
-        // Communicate with content script of
-        // active tab by sending a message
-        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-          const tab = tabs[0];
-
-          chrome.tabs.sendMessage(
-            tab.id,
-            {
-              type: 'COUNT',
-              payload: {
-                count: newCount,
-              },
-            },
-            (response) => {
-              console.log('Current count value passed to contentScript file');
-            }
-          );
-        });
-      });
-    });
-  }
-
-  function restoreCounter() {
-    // Restore count value
-    counterStorage.get((count) => {
-      if (typeof count === 'undefined') {
-        // Set counter value as 0
-        counterStorage.set(0, () => {
-          setupCounter(0);
-        });
-      } else {
-        setupCounter(count);
-      }
-    });
-  }
-
-  document.addEventListener('DOMContentLoaded', restoreCounter);
-
-  // Communicate with background file by sending a message
-  chrome.runtime.sendMessage(
-    {
-      type: 'GREETINGS',
-      payload: {
-        message: 'Hello, my name is Pop. I am from Popup.',
+  // Helper functions
+  function fireCannon() {
+    chrome.tabs.sendMessage(
+      tab.id,
+      {
+        type: 'fire-up',
       },
-    },
-    (response) => {
-      console.log(response.message);
+      (response) => {
+        console.log('cannon fired')
+      }
+    )
+  }
+  
+
+  function togglePicker() {
+    console.log('togglePicker', rootElement.style.display);
+    if (rootElement.style.display == 'none') {
+      rootElement.style.display = 'flex';
+      actionButton.style.display = 'none';
+    } else {
+      rootElement.style.display = 'none';
+      actionButton.style.display = 'flex';
     }
-  );
+  }
+
 })();

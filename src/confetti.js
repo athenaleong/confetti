@@ -15,7 +15,7 @@ function EmojiConfettiGenerator(params) {
         sizeLower: 10, //lower bound of emoji size
         sizeHigher: 90, //upper bound of emoji size
         angle: 270/180 * Math.PI, //angle of explosion
-        origin: {x: [-200, 1000],  
+        origin: {x: [-200, window.innerWidth + 200],  
                 y: [-600, 300]}, //range of origin of explosion
         spread: 0 * Math.PI //spread of explosion
     };
@@ -150,7 +150,7 @@ function EmojiConfettiGenerator(params) {
             particles.push(emojiFactory())
         }
         
-        draw()
+        return draw()
     }
 
     /**

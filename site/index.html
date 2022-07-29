@@ -38,15 +38,17 @@
         </style>
     </head>
     <body>
+        <button id="button">Hello</button>
         <canvas id="confetti-holder"></canvas>
         <!-- <script type='module' src="confetti.js"></script> -->
         <script type="module">
             import EmojiConfettiGenerator from '../src/confetti.js'
+        
             var canvas = new EmojiConfettiGenerator({
                 target:'confetti-holder',
-                emojis: ['🤩', "e"],
-                startVelocity: 1,
-                gravity:5
+                emojis: ['🪐', "🌚"],
+                startVelocity: 0.1,
+                gravity:1
             })
             canvas.render()
             document.addEventListener('keydown', function(e) {
