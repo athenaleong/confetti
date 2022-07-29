@@ -1,42 +1,21 @@
 'use strict';
 
-import EmojiConfettiGenerator from './confetti.js'
+import EmojiConfettiGenerator from './confetti.js';
+import { hashFunction } from './utils.js';
 
-const pageTitle = document.head.getElementsByTagName('title')[0].innerHTML;
-console.log(
-  `Page title is: '${pageTitle}' - evaluated by Chrome extension's 'contentScript.js' file`
-);
+//Check if cannon is set for current url, if it is set, fire cannon
+//The key is set as the hash of the url
+const url = hashFunction(document.location.href);
+chrome.storage.sync.get(url, (data) => {
+  if (data[url] !== undefined) {
+    fireUp(data[url]);
+  } 
+})
 
-// Communicate with background file by sending a message
-chrome.runtime.sendMessage(
-  {
-    type: 'GREETINGS',
-    payload: {
-      message: 'Hello, my name is Con. I am from ContentScript.',
-    },
-  },
-  (response) => {
-    console.log(response.message);
-  }
-);
-
-// Listen for message
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  console.log('received message');
-
-  if (request.type === 'COUNT') {
-    console.log(`Current count is ${request.payload.count}`);
-  }
-
-  // Send an empty response
-  // See https://github.com/mozilla/webextension-polyfill/issues/130#issuecomment-531531890
-  
-  if (request.type === 'fire-up') {
-    console.log('firing')
-
+// Fire cannon
+function fireUp(emojis) {
     const canvas = document.createElement('canvas');
     canvas.setAttribute('id', 'confetti-holder');
-    canvas.style.zIndex = '9999';
     canvas.style.width = '100%';
     canvas.style.height = '100%';
     canvas.style.position = 'fixed';
@@ -46,11 +25,18 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     document.body.appendChild(canvas);
     const cannon = new EmojiConfettiGenerator({
       target:'confetti-holder',
-      emojis: ['🪐', "🌚"],
+      emojis,
       startVelocity: 1,
       gravity:1
     })
-    cannon.render()
+    cannon.render();
+}
+
+// Listen for message
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  
+  if (request.type === 'fire-up') {
+    fireUp(request.payload.emoji);
   }
 
   sendResponse({});

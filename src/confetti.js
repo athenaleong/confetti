@@ -109,7 +109,7 @@ function EmojiConfettiGenerator(params) {
             _clear();
         }
         else {
-            return requestAnimationFrame(draw);
+            requestAnimationFrame(draw);
         }
     }
 
@@ -144,25 +144,28 @@ function EmojiConfettiGenerator(params) {
      * Render Canvas
      */
     var _render = function() {
+        cv.style.zIndex = '9999';
         cv.width = defaults.width;
         cv.height = defaults.height;
         for (var i=0; i < defaults.max; i++) {
-            particles.push(emojiFactory())
+            particles.push(emojiFactory()); 
         }
         
-        return draw()
+        draw();
     }
 
     /**
      * Clear Canvas
      */
     var _clear = function() {
-    requestAnimationFrame(function() {
-        ctx.clearRect(0, 0, cv.width, cv.height);
-    //   var w = cv.width;
-    //   cv.width = 1;
-    //   cv.width = w;
-    });
+    ctx.clearRect(0, 0, cv.width, cv.height);
+    cv.style.zIndex = '-1';
+    // requestAnimationFrame(function() {
+    //     ctx.clearRect(0, 0, cv.width, cv.height);
+    // //   var w = cv.width;
+    // //   cv.width = 1;
+    // //   cv.width = w;
+    // });
   }
     
     return {

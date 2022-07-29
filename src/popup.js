@@ -2,19 +2,31 @@
 
 import './popup.css';
 import { createPicker } from 'picmo';
-
+import {hashFunction} from './utils.js';
 (function () {
 
   let selectedEmoji = 0;
   const actionButton = document.getElementById('action-button');
+  const emojiContainer = document.getElementById('emoji-container');
   let tab;
-  chrome.tabs.query({active: true, lastFocusedWindow: true}, tabs => {
-    tab = tabs[0];
-  });
 
+  //Set up Tab on start up
+  chrome.tabs.query({active: true, currentWindow: true}, tabs => {
+    tab = tabs[0];
+    const url = hashFunction(tab.url);
+    chrome.storage.sync.get(url, (data) => {
+      //If there is no data for this url, make emoji container visible
+      if (data[url] === undefined) {
+        setEmojiContainer(true);
+      } else {
+        setEmojiContainer(false);
+      }
+    });
+  });
+  
   // Create the picker
-  const rootElement = document.querySelector('#picker-container');
-  const picker = createPicker({ rootElement });
+  const pickerContainer = document.querySelector('#picker-container');
+  const picker = createPicker({ rootElement: pickerContainer });
 
   // The picker emits an event when an emoji is selected. 
   picker.addEventListener('emoji:select', event => {
@@ -25,11 +37,11 @@ import { createPicker } from 'picmo';
 
   // Set up Array of Emojis Divs
   const emojiArray = [];
-  let emoji;
+  let emojiDiv;
   for (let i = 1; i < 4; i++) {
-    emoji = document.querySelector(`#emoji-${i}`);
-    emojiArray.push(emoji);
-    emoji.addEventListener('click', () => {
+    emojiDiv = document.querySelector(`#emoji-${i}`);
+    emojiArray.push(emojiDiv);
+    emojiDiv.addEventListener('click', () => {
       selectedEmoji = i - 1;
       console.log(selectedEmoji, 'selected');
       togglePicker();
@@ -38,15 +50,33 @@ import { createPicker } from 'picmo';
 
   // Add event for button
   actionButton.addEventListener('click', () => {
-      fireCannon();
+
+    if (emojiContainer.style.display == 'none') {
+      // Cannon is currently loaded, so unload it 
+      chrome.storage.sync.remove(hashFunction(tab.url), () => {
+        setEmojiContainer(true);
+      });
+    } else {
+      // Cannon is currently unloaded, so load it
+      const emoji = emojiArray.map(e => e.innerHTML);
+      const data = {};
+      data[hashFunction(tab.url)] = emoji;
+      chrome.storage.sync.set(data, function() {
+        fireCannon(emoji);
+        setEmojiContainer(false);
+      })
+    }
   })
 
   // Helper functions
-  function fireCannon() {
+
+  // Send message to content script to fire cannon
+  function fireCannon(emoji) {
     chrome.tabs.sendMessage(
       tab.id,
       {
         type: 'fire-up',
+        payload: { emoji }
       },
       (response) => {
         console.log('cannon fired')
@@ -54,16 +84,29 @@ import { createPicker } from 'picmo';
     )
   }
   
-
   function togglePicker() {
-    console.log('togglePicker', rootElement.style.display);
-    if (rootElement.style.display == 'none') {
-      rootElement.style.display = 'flex';
+    console.log('togglePicker', pickerContainer.style.display);
+    if (pickerContainer.style.display == 'none') {
+      pickerContainer.style.display = 'flex';
       actionButton.style.display = 'none';
     } else {
-      rootElement.style.display = 'none';
+      pickerContainer.style.display = 'none';
       actionButton.style.display = 'flex';
     }
   }
+  /**
+   * set visibility of emoji container based on param
+   * @param {boolean} isVisible 
+   */
+  function setEmojiContainer(isVisible) {
+    if (isVisible) {
+      emojiContainer.style.display = 'flex';
+      actionButton.innerHTML ='Fire up';
+    } else {
+      emojiContainer.style.display = 'none';
+      actionButton.innerHTML = 'Unload Cannon';
+    }
+  }
 
+  
 })();
