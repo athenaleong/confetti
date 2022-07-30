@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Emoji Cannon",
   "version": "0.1.0",
-  "description": "Have an emoji explosion on your screen!",
+  "description": "Blast the screen with your emojis of choice whenever you visit this url!",
   "icons": {
     "16": "icons/icon_16.png",
     "32": "icons/icon_32.png",
