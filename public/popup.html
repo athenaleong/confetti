@@ -4,6 +4,9 @@
     <meta charset="UTF-8" />
     <title>My Chrome Extension</title>
     <link rel="stylesheet" href="popup.css" />
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap');
+    </style>
   </head>
   <body>
     <div class="app">
@@ -18,16 +21,19 @@
 
       <p class="title">Chrome Extension is Ready!</p>
       <p class="subtitle">Start by updating <code>popup.html</code></p> -->
-      <p>EMOJI CANNON</p>
-      <div id="emoji-container" class="emoji-container">
-        <button id="emoji-1" class="emoji">😮</button>
-        <button id="emoji-2" class="emoji">😮</button>
-        <button id="emoji-3" class="emoji">😮</button>
+      <p>blast the screen with <br> your emojis of choice <br> whenever you visit this url</p>
+      <div class="emoji-wrapper" id="emoji-wrapper">
+        <h2>pick your emojis</p>
+        <div id="emoji-container" class="emoji-container">
+          <div id="emoji-1" class="emoji">❔</div>
+          <div id="emoji-2" class="emoji">❔</div>
+          <div id="emoji-3" class="emoji">❔</div>
+        </div>
+        <div id="picker-container" class="picker-container"></div>
       </div>
-      <div id="picker-container" class="picker-container"></div>
-      <button id="action-button" class="action-button">
-        <p>Fire Up</p>
-      </button>
+      <div id="action-button" class="action-button">
+        press to load
+      </div>
 
     </div>
 

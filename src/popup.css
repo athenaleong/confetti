@@ -15,8 +15,12 @@ html {
 }
 
 body {
-  width: 400px;
+  width: 420px;
   height: fit-content;
+  background-color: #0B0A0A;
+  color: white;
+  font-family: 'VT323', monospace;
+  text-align: center;
 }
 
 .app {
@@ -24,6 +28,14 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin: 15px;
+  border: 4px solid white;
+  padding: 15px;
+}
+
+.emoji-wrapper {
+  display: flex;
+  flex-direction: column;
 }
 
 .emoji-container {
@@ -36,13 +48,14 @@ body {
   cursor: pointer;
   font-size: 48px;
   margin: 20px;
-  background-color: lightblue;
+  background-color: #3D3C3C;
   border-radius: 50%;
   width: 72px;
   height: 72px;
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
 }
 
 .picker-container {
@@ -55,7 +68,31 @@ body {
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  margin: 20px;
-  padding: 20px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  background-color: transparent;
+  color: white;
+  cursor: pointer;
+  font-family: 'Press Start 2P';
+  font-size: 18px;
+  animation: blinker 3s linear infinite;
+}
+
+@keyframes blinker {
+  80% {
+    opacity: 0;
+  }
+}
+
+p {
+  font-size: 24px;
+  margin-top: 10px;
+  margin-bottom:10px;
+}
+
+h2 {
+  font-size: 40px;
+  margin-top: 10px;
+  margin-bottom:10px;
 }
 

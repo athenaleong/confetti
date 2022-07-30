@@ -8,6 +8,7 @@ import {hashFunction} from './utils.js';
   let selectedEmoji = 0;
   const actionButton = document.getElementById('action-button');
   const emojiContainer = document.getElementById('emoji-container');
+  const emojiWrapper = document.getElementById('emoji-wrapper');
   let tab;
 
   //Set up Tab on start up
@@ -17,15 +18,17 @@ import {hashFunction} from './utils.js';
     chrome.storage.sync.get(url, (data) => {
       //If there is no data for this url, make emoji container visible
       if (data[url] === undefined) {
-        setEmojiContainer(true);
+        setEmojiWrapper(true);
       } else {
-        setEmojiContainer(false);
+        setEmojiWrapper(false);
       }
     });
   });
   
   // Create the picker
   const pickerContainer = document.querySelector('#picker-container');
+  // Set picker style to none to hide it
+  pickerContainer.style.display = 'none';
   const picker = createPicker({ rootElement: pickerContainer });
 
   // The picker emits an event when an emoji is selected. 
@@ -51,10 +54,10 @@ import {hashFunction} from './utils.js';
   // Add event for button
   actionButton.addEventListener('click', () => {
 
-    if (emojiContainer.style.display == 'none') {
+    if (emojiWrapper.style.display == 'none') {
       // Cannon is currently loaded, so unload it 
       chrome.storage.sync.remove(hashFunction(tab.url), () => {
-        setEmojiContainer(true);
+        setEmojiWrapper(true);
       });
     } else {
       // Cannon is currently unloaded, so load it
@@ -63,7 +66,7 @@ import {hashFunction} from './utils.js';
       data[hashFunction(tab.url)] = emoji;
       chrome.storage.sync.set(data, function() {
         fireCannon(emoji);
-        setEmojiContainer(false);
+        setEmojiWrapper(false);
       })
     }
   })
@@ -98,13 +101,13 @@ import {hashFunction} from './utils.js';
    * set visibility of emoji container based on param
    * @param {boolean} isVisible 
    */
-  function setEmojiContainer(isVisible) {
+  function setEmojiWrapper(isVisible) {
     if (isVisible) {
-      emojiContainer.style.display = 'flex';
-      actionButton.innerHTML ='Fire up';
+      emojiWrapper.style.display = 'flex';
+      actionButton.innerHTML ='PRESS TO LOAD';
     } else {
-      emojiContainer.style.display = 'none';
-      actionButton.innerHTML = 'Unload Cannon';
+      emojiWrapper.style.display = 'none';
+      actionButton.innerHTML = 'PRESS TO UNLOAD';
     }
   }
 
