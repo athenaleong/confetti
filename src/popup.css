@@ -57,6 +57,11 @@ body {
   cursor: pointer;
 }
 
+.emoji:hover {
+  width: 76px;
+  height: 76px;
+}
+
 .picker-container {
   height: fit-content;
   display: none;
