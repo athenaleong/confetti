@@ -1,7 +1,7 @@
 'use strict';
 
 import './popup.css';
-import { createPicker } from 'picmo';
+import { createPicker, darkTheme } from 'picmo';
 import {hashFunction} from './utils.js';
 (function () {
 
@@ -29,7 +29,13 @@ import {hashFunction} from './utils.js';
   const pickerContainer = document.querySelector('#picker-container');
   // Set picker style to none to hide it
   pickerContainer.style.display = 'none';
-  const picker = createPicker({ rootElement: pickerContainer });
+  const picker = createPicker(
+    { 
+      rootElement: pickerContainer,
+      theme: darkTheme,
+      showPreview: false,
+      visibleRows: 5,
+    });
 
   // The picker emits an event when an emoji is selected. 
   picker.addEventListener('emoji:select', event => {
