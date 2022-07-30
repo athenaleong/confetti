@@ -97,10 +97,8 @@ import {hashFunction} from './utils.js';
     console.log('togglePicker', pickerContainer.style.display);
     if (pickerContainer.style.display == 'none') {
       pickerContainer.style.display = 'flex';
-      actionButton.style.display = 'none';
     } else {
       pickerContainer.style.display = 'none';
-      actionButton.style.display = 'flex';
     }
   }
   /**
